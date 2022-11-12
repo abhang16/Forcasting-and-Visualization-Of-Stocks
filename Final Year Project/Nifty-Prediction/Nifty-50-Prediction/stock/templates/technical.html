@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<!-- Required meta tags -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+
+		<!-- Fontawesome -->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+		<link rel="shortcut icon" href="" type="image/x-icon">
+
+		<title>Nifty50 Prediction</title>
+	</head>
+	<style type="text/css">
+		html{
+			scroll-behavior: smooth;
+		}
+		
+		/* width */
+		::-webkit-scrollbar {
+			width: 5px;
+		}
+
+		/* Track */
+		::-webkit-scrollbar-track {
+			box-shadow: inset 0 0 5px grey; 
+			border-radius: 10px;
+		}
+
+		/* Handle */
+		::-webkit-scrollbar-thumb {
+			background: #0275d8; 
+			border-radius: 10px;
+		}
+
+		/* Handle on hover */
+		::-webkit-scrollbar-thumb:hover {
+			background: rgb(2,100,200); 
+		}
+
+	</style>
+	<header>
+
+		<!-- Navigation Bar -->
+		{% if user.is_authenticated %}
+		<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-5 shadow-lg fixed-top">
+			<a class="navbar-brand" href="#main"><i class="fa fa-line-chart px-2" aria-hidden="true"></i>Nifty50 Prediction</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+				<div class="navbar-nav ml-auto">
+					<a class="nav-item nav-link px-4 mx-2 btn" href="fundamental">Fundamental</a>
+					<a class="nav-item nav-link px-4 mx-2 btn" href="technical">Technical</a>
+					<a class="nav-item nav-link px-4 mx-2 btn" href="base">Home</a>
+					{% if request.path == '/about/' %}
+					<a class="nav-item nav-link px-4 mx-2 btn active" href="#">About</a>
+					{% else %}
+					<a class="nav-item nav-link px-4 mx-2 btn" href="#">About</a>
+					{% endif %}
+					<form action="{% url 'logoutuser' %}" method="POST">
+						{% csrf_token %}
+						<button class="nav-item px-4 btn btn-primary btn-block rounded-ls" type="submit">{{ user.username|title }}</button>
+					</form>
+				</div>
+			</div>
+		</nav>
+		{% elif request.path == '/' %}
+		<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-5 shadow-lg fixed-top">
+			<a class="navbar-brand" href="#main"><i class="fa fa-line-chart px-2" aria-hidden="true"></i>Nifty50 Prediction</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+				<div class="navbar-nav ml-auto">
+					<a class="nav-item nav-link px-4 mx-2 btn" href="fundamental">Fundamental</a>
+					<a class="nav-item nav-link px-4 mx-2 btn" href="technical">Technical</a>
+					<a class="nav-item nav-link px-4 mx-2 btn" href="base">Home</a>
+					{% if request.path == '/about/' %}
+					<a class="nav-item nav-link px-4 mx-2 btn active" href="#">About</a>
+					{% else %}
+					<a class="nav-item nav-link px-4 mx-2 btn" href="#">About</a>
+					{% endif %}
+					<a class="nav-item px-4 btn btn-primary btn-block rounded-lg" href="{% url 'signupuser' %}">Register</a>
+				</div>
+			</div>
+		</nav>
+		{% else %}
+		<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-5 shadow-lg fixed-top">
+			<a class="navbar-brand" href="{% url 'home' %}"><i class="fa fa-line-chart px-2" aria-hidden="true"></i>Nifty50 Prediction</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+				<div class="navbar-nav ml-auto">
+					{% if request.path == '/about/' %}
+					<a class="nav-item nav-link px-4 mx-2 btn active" href="#">About</a>
+					{% else %}
+					<a class="nav-item nav-link px-4 mx-2 btn" href="#">About</a>
+					{% endif %}
+					<a class="nav-item px-4 btn btn-primary btn-block rounded-lg" href="{% url 'home' %}">&nbsp;Log in&nbsp;&nbsp;</a>
+				</div>
+			</div>
+		</nav>
+		{% endif %}
+
+	</header>
+	<body class="text-light bg-dark">
+
+	<!-- Main Content -->
+	{% block 'content' %}
+	{% endblock 'content' %}
+
+	<!-- Optional JavaScript; choose one of the two! -->
+
+	<!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
+
+	<!-- Option 2: Separate Popper and Bootstrap JS -->
+	    <!--
+	    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+	    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+	    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" integrity="sha384-+YQ4JLhjyBLPDQt//I+STsc9iw4uQqACwlvpslubQzn4u2UU2UFM80nGisd026JF" crossorigin="anonymous"></script> -->
+
+
+	    {% block 'script' %}
+	    {% endblock 'script' %}
+	    <div class="jumbotron bg-dark mb-0" id="main">
+	<div class="container mt-5">	
+		
+		<div class="row" style="min-height: 70vh;">
+			<div class="col-sm-8 mr-0">
+			<!-- 	<canvas id="myChart" width="600" height="300">
+					What Is Fundamental Analysis?
+Fundamental analysis (FA) is a method of measuring a security's intrinsic value by examining related economic and financial factors. Fundamental analysts study anything that can affect the security's value, from macroeconomic factors such as the state of the economy and industry conditions to microeconomic factors like the effectiveness of the company's management.
+				</canvas> -->
+		
+					<h1>What Is Technical Analysis?</h1>
+<p>Technical analysis is the study of historical market data, including price and volume. Using insights from market psychology, behavioral economics, and quantitative analysis, technical analysts aim to use past performance to predict future market behavior</p>
+<p>Technical analysis attempts to predict future price movements, providing traders with the information needed to make a profit.</p>
+<p>Traders apply technical analysis tools to charts in order to identify entry and exit points for potential trades.</p>
+
+				<form action="" method="POST"class="input-group mt-5">
+					<input type="hidden" name="csrfmiddlewaretoken" value="i3K03V8BuPhdKkSWddsiAFF6roLdbwM0QzVYkF1TkeWjs2XDov90aTrETn8IKMVw">
+				<SELECT id="s1" NAME="section" onChange="SelectRedirect(); "style="background-color:#c2d8df;
+}">
+<Option value="" >Select Section</option>
+<Option value="1">Adani Ports and Special Economic Zone Ltd</option>
+<Option value="2">Asian Paints Ltd.</option>
+<Option value="3">Axis Bank Ltd.</option>
+<Option value="4">Bajaj Auto Ltd.</option>
+<Option value="5">Bajaj Finance Ltd.</option>
+<Option value="6">Bajaj Finserv Ltd.</option>
+<Option value="7">Bharat Petroleum Corporation Ltd.</option>
+<Option value="8">Bharti Airtel Ltd.</option>
+<Option value="9">Britannia Industries Ltd.</option>
+<Option value="10">Cipla Ltd.</option>
+</SELECT>
+<script language="javascript">
+function SelectRedirect(){
+// ON selection of section this function will work
+//alert( document.getElementById('s1').value);
+
+switch(document.getElementById('s1').value)
+{
+case "1":
+window.location="https://trendlyne.com/equity/technical-analysis/ADANIPORTS/27/adani-ports-special-economic-zone-ltd";
+break;
+
+case "2":
+window.location="https://trendlyne.com/equity/technical-analysis/ASIANPAINT/117/asian-paints-ltd";
+break;
+
+case "3":
+window.location="https://trendlyne.com/equity/technical-analysis/AXISBANK/140/axis-bank-ltd";
+break;
+case "4":
+window.location="https://trendlyne.com/equity/technical-analysis/BAJAJ-AUTO/144/bajaj-auto-ltd";
+break;
+
+case "5":
+window.location="https://trendlyne.com/equity/technical-analysis/BAJFINANCE/150/bajaj-finance-ltd";
+break;
+
+case "6":
+window.location="https://trendlyne.com/equity/technical-analysis/BAJAJFINSV/147/bajaj-finserv-ltd";
+break;
+
+case "7":
+window.location="https://trendlyne.com/equity/technical-analysis/BPCL/215/bharat-petroleum-corporation-ltd";
+break;
+
+case "8":
+window.location="https://trendlyne.com/equity/technical-analysis/BHARTIARTL/187/bharti-airtel-ltd/";
+break;
+
+case "9":
+window.location="https://trendlyne.com/equity/technical-analysis/BRITANNIA/220/britannia-industries-ltd";
+break;
+
+case "10":
+window.location="https://trendlyne.com/equity/technical-analysis/CIPLA/268/cipla-ltd";
+break;
+/// Can be extended to other different selections of SubCategory //////
+default:
+window.location="../"; // if no selection matches then redirected to home page
+break;
+}// end of switch 
+}
+////////////////// 
+</script>
+					
+				</form>
+			</div>
+			<div class="col-sm-4 ml-0">
+				
+<!-- 1 day table
++  
+ -->
+
+			  <!-- 30 days table -->
+			  
+			</div>
+		</div>
+		
+	</div>
+	
+
+
+	<!-- <div class="col-md-6">
+           
+		<div class="container m-5 border-2 text-light ">
+		  
+		
+
+	-->
+
+	</body>
+	
+</html>
+
